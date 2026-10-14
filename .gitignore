@@ -17,4 +17,4 @@ __pycache__/
 .idea/
 
 # Datos crudos (se descargan con script, no se suben)
-data/
+/data
