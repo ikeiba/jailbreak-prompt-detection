@@ -105,3 +105,100 @@ def calculate_elmo_word_similarity(palabras, docs_train, elmo, max_prompts=5):
         })
 
     return pd.DataFrame(resultados)
+
+
+
+import numpy as np
+import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
+
+
+def calculate_elmo_similar_words(palabras, docs_train, domain_w2v, elmo):
+
+    # 1. Obtener las 10 palabras similares según Word2Vec
+    vecinos = {
+        palabra: domain_w2v.wv.most_similar(palabra, topn=10)
+        for palabra in palabras
+    }
+
+    # Reunir todas las palabras que necesitamos representar
+    todas_palabras = set(palabras)
+
+    for lista in vecinos.values():
+        todas_palabras.update(p for p, similitud in lista)
+
+    # 2. Seleccionar máximo 5 prompts por palabra
+    contextos = {}
+
+    for palabra in todas_palabras:
+
+        prompts = [
+            tuple(prompt) for prompt in docs_train
+            if palabra in prompt and len(prompt) <= 150
+        ]
+
+        # Priorizar prompts cortos y sin duplicados
+        contextos[palabra] = sorted(set(prompts), key=len)[:5]
+
+    # 3. Agrupar prompts para evitar calcularlos varias veces
+    prompt_palabras = {}
+
+    for palabra, prompts in contextos.items():
+        for prompt in prompts:
+            prompt_palabras.setdefault(prompt, []).append(palabra)
+
+    prompts_unicos = list(prompt_palabras)
+
+    embeddings_palabras = {p: [] for p in todas_palabras}
+
+    # 4. Generar embeddings contextuales con ELMo por lotes
+    batch_size = 4
+
+    for i in range(0, len(prompts_unicos), batch_size):
+
+        batch = prompts_unicos[i:i + batch_size]
+
+        embeddings = elmo.get_elmo_vectors(
+            [list(prompt) for prompt in batch]
+        )
+
+        for j, prompt in enumerate(batch):
+            for palabra in prompt_palabras[prompt]:
+
+                posicion = prompt.index(palabra)
+                vector = embeddings[j, posicion, :]
+
+                if np.isfinite(vector).all():
+                    embeddings_palabras[palabra].append(vector)
+
+    # 5. Calcular el embedding medio de cada palabra
+    medias = {}
+
+    for palabra, vectores in embeddings_palabras.items():
+        if len(vectores) > 0:
+            medias[palabra] = np.mean(vectores, axis=0)
+
+    # 6. Calcular similitud coseno entre palabra y candidatas
+    resultados = []
+
+    for palabra, candidatas in vecinos.items():
+
+        for candidata, similitud_w2v in candidatas:
+
+            similitud_elmo = np.nan
+
+            if palabra in medias and candidata in medias:
+                similitud_elmo = cosine_similarity(
+                    medias[palabra].reshape(1, -1),
+                    medias[candidata].reshape(1, -1)
+                )[0, 0]
+
+            resultados.append({
+                "palabra": palabra,
+                "candidata": candidata,
+                "W2V_cosine": similitud_w2v,
+                "ELMO_cosine": similitud_elmo,
+                "n_prompts": len(embeddings_palabras[candidata])
+            })
+
+    return pd.DataFrame(resultados)
