@@ -300,4 +300,4 @@ def crear_pares_prompt(docs, splits):
         ).size()
     )
 
-    display(df_pares)
+    return(df_pares)

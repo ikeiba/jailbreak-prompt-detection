@@ -79,3 +79,4 @@ def train_domain_w2v(docs, model):
         total_examples=domain_w2v.corpus_count,
         epochs=10
     )
+    return domain_w2v
