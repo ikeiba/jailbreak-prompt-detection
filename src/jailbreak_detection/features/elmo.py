@@ -134,10 +134,10 @@ def calculate_elmo_similar_words(palabras, docs_train, domain_w2v, elmo):
 
         prompts = [
             tuple(prompt) for prompt in docs_train
-            if palabra in prompt and len(prompt) <= 150
+            if palabra in prompt
         ]
 
-        # Priorizar prompts cortos y sin duplicados
+        # Elegir los 5 prompts distintos más cortos
         contextos[palabra] = sorted(set(prompts), key=len)[:5]
 
     # 3. Agrupar prompts para evitar calcularlos varias veces
