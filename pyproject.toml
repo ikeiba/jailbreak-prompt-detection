@@ -10,6 +10,7 @@ dependencies = [
     "langdetect>=1.0.9",
     "matplotlib>=3.11.2",
     "nltk>=3.10.3",
+    "optuna>=5.0.0",
     "pandas>=3.0.6",
     "scikit-learn>=1.9.1",
     "simple-elmo>=0.9.2",
