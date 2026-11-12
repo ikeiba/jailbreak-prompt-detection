@@ -68,7 +68,7 @@ class ElmoCache:
                     f"Ejecuta {PRECOMPUTE_NOTEBOOK} (con el mismo valor de QUICK) para generarla"
                     + ("" if self.name == "head_tail__L1024" else
                        "; esta configuración es de una ablación: el 05 la genera cuando ELMo ha "
-                       "ganado el paso 1 del 06 (o con FORCE_ABLATIONS = True)") + ".")
+                       "ganado el paso 1 de notebooks/06_deep_encoder.ipynb (o con FORCE_ABLATIONS = True)") + ".")
             index = np.load(d / "index.npz")
             array = np.memmap(d / "vectors.f16", dtype=STORE_DTYPE, mode="r",
                               shape=(int(status["total_rows"]), ELMO_DIM))
