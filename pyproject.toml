@@ -17,8 +17,12 @@ dependencies = [
     "tensorboard>=2.21.0",
     "tensorflow>=2.21.0",
     "tf-keras==2.21.0",
+<<<<<<< HEAD
     "torch>=2.15.0",
     "torchinfo>=1.8.0",
+=======
+    "xgboost>=3.4.1",
+>>>>>>> 8b96c4bf7ce32bf4bbbd8a1abee45cbc4d358096
 ]
 
 [dependency-groups]
