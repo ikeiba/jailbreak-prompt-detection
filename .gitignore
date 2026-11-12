@@ -18,3 +18,6 @@ __pycache__/
 
 # Datos crudos (se descargan con script, no se suben)
 /data
+# Salidas de entrenamiento (checkpoints, métricas, caché de embeddings) y logs de TensorBoard
+/outputs
+/runs
