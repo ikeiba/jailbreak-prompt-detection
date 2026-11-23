@@ -12,6 +12,7 @@ dependencies = [
     "nltk>=3.10.3",
     "optuna>=5.0.0",
     "pandas>=3.0.6",
+    "peft>=0.22.0",
     "scikit-learn>=1.9.1",
     "simple-elmo>=0.9.2",
     "tensorboard>=2.21.0",
@@ -19,6 +20,8 @@ dependencies = [
     "tf-keras==2.21.0",
     "torch>=2.15.0",
     "torchinfo>=1.8.0",
+    "transformers>=5.2",
+    "trl>=1.18.2",
     "xgboost>=3.4.1",
 ]
 
