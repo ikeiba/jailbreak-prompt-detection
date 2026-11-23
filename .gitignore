@@ -21,3 +21,5 @@ __pycache__/
 # Salidas de entrenamiento (checkpoints, métricas, caché de embeddings) y logs de TensorBoard
 /outputs
 /runs
+
+/docs
